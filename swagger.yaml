@@ -1,0 +1,15 @@
+openapi 3.0.0
+info:
+	version: '0.1'
+	title: 'Media server supports DASH'
+	description: 'DASH를 이용한 미디어 서버 데모입니다'
+
+servers:
+- description: 'Main server'
+  url: http://localhost:8080
+- description: 'Packaging server'
+  url: http://localhost:8080
+- description: 'Key server'
+  url: http://localhost:8080
+
+paths:

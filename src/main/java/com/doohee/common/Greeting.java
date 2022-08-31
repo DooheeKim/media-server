@@ -1,6 +1,5 @@
-package com.doohee.restservice;
+package com.doohee.common;
 
-import lombok.Data;
 import lombok.Getter;
 
 

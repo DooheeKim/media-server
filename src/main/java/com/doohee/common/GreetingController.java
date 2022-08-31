@@ -1,4 +1,4 @@
-package com.doohee.restservice;
+package com.doohee.common;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -8,30 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
-/*
-*@GetMapping("/hls/{fileName}/{fileName}.m3u8")
-	public ResponseEntity<Resource> videoHlsM3U8(@PathVariable String fileName) {
-		log.debug("************** class = {}, function = {}", this.getClass().getName(), new Object(){}.getClass().getEnclosingMethod().getName());
-		String fileFullPath = UPLOAD_DIR + fileName + "/" + fileName + ".m3u8";
-		Resource resource = new FileSystemResource(fileFullPath);
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName + ".m3u8");
-		headers.setContentType(MediaType.parseMediaType("application/vnd.apple.mpegurl"));
-		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
-	}
 
-	@GetMapping("/hls/{fileName}/{tsName}.ts")
-	public ResponseEntity<Resource> videoHlsTs(@PathVariable String fileName, @PathVariable String tsName) {
-		log.debug("************** class = {}, function = {}", this.getClass().getName(), new Object(){}.getClass().getEnclosingMethod().getName());
-		String fileFullPath = UPLOAD_DIR + fileName + "/" + tsName + ".ts";
-		Resource resource = new FileSystemResource(fileFullPath);
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + tsName + ".ts");
-		headers.setContentType(MediaType.parseMediaType(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
-	}
-출처: https://suyou.tistory.com/265 [수유산장:티스토리]
-* */
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class GreetingController {

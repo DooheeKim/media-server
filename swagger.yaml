@@ -43,8 +43,8 @@ paths:
           description: Invalid ID supplied
         '404':
           description: File not found
-        '405':
-          description: Validation exception
+        '406':
+          description: Given extension is not supported - Only supports mpd and m4s.
 
   /dashVideo:
     post:

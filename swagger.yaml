@@ -1,15 +1,254 @@
-openapi 3.0.0
+openapi: 3.0.3
 info:
-	version: '0.1'
-	title: 'Media server supports DASH'
-	description: 'DASH를 이용한 미디어 서버 데모입니다'
-
+  title: Media server supports MPEG-DASH
+  description: 
+    DASH와 ClearKey 기반의 암호화를 지원하는 MPEG DASH 미디어 서버입니다.
+  contact:
+    email: dooheekim5@gmail.com
+  version: 0.1.0
 servers:
-- description: 'Main server'
-  url: http://localhost:8080
-- description: 'Packaging server'
-  url: http://localhost:8080
-- description: 'Key server'
-  url: http://localhost:8080
+  - url: http://localhost:8080/
+tags:
+  - name: Main
+    description: Client와 직접 통신하는 메인 서버
+  - name: Packaging
+    description: 영상의 인코딩을 담당하는 서버
+  - name: Key
+    description: 영상의 key 값을 관리하는 서버
 
 paths:
+  /dashVideo/{filename}:
+    get:
+      tags:
+        - Main
+      summary: DASH를 이용하여 비디오 파일을 가져옵니다
+      description: 재생을 위해 DASH를 이용하여 비디오 파일을 가져옵니다.
+      operationId: playDashVideo
+      parameters:
+        - name: filename
+          in: path
+          description: DASH로 인코딩 된 영상을 가져옵니다. 파일은 ".mpd" 혹은 ".m4s" 확장자만 지원합니다.
+          required: true
+          schema:
+            format: string.string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            video/m4s:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: File not found
+        '405':
+          description: Validation exception
+
+  /dashVideo:
+    post:
+      tags:
+        - Main
+      summary: 비디오를 업로드합니다
+      description: 비디오를 업로드합니다
+      operationId: uploadVideo
+      requestBody:
+        description: 비디오를 업로드합니다
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                exposure:
+                  type: string
+                  enum:
+                    - private
+                    - public
+                  format: base64
+                  example: private
+                title:
+                  type: string
+                  format: string
+                  example: Big buck bunny
+                description:
+                  type: string
+                  format: string
+                  example: The plot follows a day in the life of Big Buck Bunny ... 
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '405':
+          description: Invalid input
+  /videos:
+    get:
+      tags:
+        - Main
+      summary: 페이지 별 비디오의 목록을 받아옵니다
+      operationId: getVideoList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 3
+                  default: 0
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Video'
+        '400':
+          description: invalid page supplied
+  /videos/{videoId}:
+    get:
+      tags:
+        - Main
+      summary: 비디오 아이디로부터 비디오 메타정보를 받아옵니다
+      operationId: getVideoInfo
+      parameters:
+        - name: videoId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+        '400':
+          description: Invalid ID supplied
+            
+  /encode/{videoId}:
+    get:
+      tags:
+        - Packaging
+      summary: 비디오를 인코딩합니다
+      description: 비디오를 360p, 480p, 720p, 1080p로 인코딩합니다
+      operationId: encodeVideo
+      parameters:
+        - name: videoId
+          in: query
+          description: 인코딩 하고자 하는 비디오의 아이디
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Encoding request submitted
+        '409':
+          description: Already in encoding process
+  /package/{videoId}:
+    get:
+      tags:
+        - Packaging
+      summary: 비디오를 DASH로 패키징 합니다
+      description: 비디오를 암호화된 DASH 형태(*.mpd와 재생 가능한 세그먼트들)로 패키징합니다.
+      operationId: segmentizeVideo
+      parameters:
+        - name: videoId
+          in: query
+          description: DASH로 패키징하고자 하는 비디오의 아이디
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Packaging request submitted
+        '409':
+          description: Already in packaging process
+  /key/{videoId}:
+    put:
+      tags:
+        - Key
+      summary: 비디오를 암호화하기 위한 키를 생성합니다.
+      description: 비디오를 암호화하기 위한 키를 생성합니다.
+      operationId: createEncryptionKey
+      parameters:
+        - name: videoId
+          in: query
+          description: 암호를 생성하고자 하는 비디오의 아이디
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '503':
+          description: can't create encryption key
+    get:
+      tags:
+        - Key
+      summary: 비디오의 암호화키를 반환합니다.
+      description: 유저의 아이디 토큰으로 동영상 해독을 위한 암호화된 암호화키를 반환받습니다.
+      operationId: getEncryptionKey
+      parameters:
+        - name: videoId
+          in: query
+          description: 암호를 생성하고자 하는 비디오의 아이디
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        '503':
+          description: can't get decryption key
+  
+components:
+  schemas:
+    Video:
+      required:
+        - title
+        - description
+      type: object
+      properties:
+        id:
+          type: string
+          format: string
+          example: random_video_id
+        title:
+          type: string
+          format: string
+          example: Big buck bunny
+        description:
+          type: string
+          format: string
+          example: The plot follows a day in the life of Big Buck Bunny...
+    Key:
+      type: object
+      properties:
+        key_id:
+          type: string
+          format: string
+          example: key id of the video
+        key:
+          type: string
+          format: string
+          example: key of the video

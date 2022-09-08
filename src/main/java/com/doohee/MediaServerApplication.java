@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"com.doohee"})
+@ComponentScan({"com.doohee.main", "com.doohee.common", "com.doohee"})
 public class MediaServerApplication {
 //	@Autowired
 //	GreetingController greetingController;

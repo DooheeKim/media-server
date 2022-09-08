@@ -1,5 +1,7 @@
 package com.doohee.main;
 
+import com.doohee.main.dto.VideoUploadData;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -20,7 +22,6 @@ public class MainController {
     @Autowired
     Environment environment;
 
-    String defaultPath = environment.getProperty("storage.path");
     @GetMapping("/dashVideo/{filename}")
     public ResponseEntity<Resource> getVideoWithDash(@PathVariable String filename){
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -30,7 +31,7 @@ public class MainController {
         }
         String filenameWithoutExtension = filename.substring(0, filename.length()-4);
         // 파일명과 같은 폴더가 존재하는지 확인(해당 폴더 안에 결과물이 들어가기로 약속)
-        Path path = Paths.get(defaultPath + filenameWithoutExtension);
+        Path path = Paths.get(environment.getProperty("storage.path") + filenameWithoutExtension);
         if(!Files.exists(path)){//해당 경로가 존재하지 않으면 --> 없는 파일
             return new ResponseEntity<Resource>(null, httpHeaders, HttpStatus.NOT_FOUND);
         }
@@ -40,8 +41,9 @@ public class MainController {
     }
 
     @PostMapping("/dashVideo")
-    public ResponseEntity<String> uploadVideoFile(@RequestBody Object req){
+    public ResponseEntity<String> uploadVideoFile(@RequestBody VideoUploadData info){
         HttpHeaders httpHeaders = new HttpHeaders();
+
         return new ResponseEntity<String>("",httpHeaders, HttpStatus.OK);
     }
 

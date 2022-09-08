@@ -66,10 +66,10 @@ paths:
                 exposure:
                   type: string
                   enum:
-                    - private
-                    - public
+                    - PRIVATE
+                    - PUBLIC
                   format: base64
-                  example: private
+                  example: PRIVATE
                 title:
                   type: string
                   format: string

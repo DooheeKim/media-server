@@ -1,8 +1,7 @@
-package com.doohee.packaging.service;
+package com.doohee.mediaserver.service;
 
-import com.doohee.common.Exception.NoVideoKeyExistsException;
-import com.doohee.key.dto.VideoKeyDto;
-import com.doohee.key.service.KeyService;
+import com.doohee.mediaserver.dto.VideoKeyDto;
+import com.doohee.mediaserver.service.KeyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
@@ -10,11 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 @Service

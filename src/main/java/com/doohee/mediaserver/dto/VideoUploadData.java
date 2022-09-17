@@ -1,5 +1,6 @@
-package com.doohee.main.dto;
+package com.doohee.mediaserver.dto;
 
+import com.doohee.mediaserver.entity.Exposure;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;

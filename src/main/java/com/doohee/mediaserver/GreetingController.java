@@ -1,4 +1,4 @@
-package com.doohee.common;
+package com.doohee.mediaserver;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;

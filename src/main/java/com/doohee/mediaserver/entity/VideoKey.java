@@ -1,6 +1,7 @@
-package com.doohee.key.entity;
+package com.doohee.mediaserver.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Table(name="VIDEO_KEY")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoKey {

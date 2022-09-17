@@ -1,9 +1,8 @@
-package com.doohee.key.service;
+package com.doohee.mediaserver.service;
 
 
-import com.doohee.key.dto.VideoKeyDto;
-import com.doohee.key.entity.VideoKey;
-import com.doohee.key.repository.KeyRepository;
+import com.doohee.mediaserver.dto.VideoKeyDto;
+import com.doohee.mediaserver.repository.KeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

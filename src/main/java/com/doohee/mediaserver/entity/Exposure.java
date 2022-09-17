@@ -1,4 +1,4 @@
-package com.doohee.main.dto;
+package com.doohee.mediaserver.entity;
 
 public enum Exposure {
     PRIVATE, PUBLIC;

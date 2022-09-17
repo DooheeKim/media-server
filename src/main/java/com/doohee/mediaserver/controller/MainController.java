@@ -1,9 +1,7 @@
-package com.doohee.main;
+package com.doohee.mediaserver.controller;
 
-import com.doohee.main.dto.VideoUploadData;
-import lombok.AllArgsConstructor;
+import com.doohee.mediaserver.dto.VideoUploadData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;

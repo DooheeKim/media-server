@@ -1,8 +1,8 @@
 package com.doohee.main;
 
-import com.doohee.main.dto.Exposure;
-import com.doohee.main.dto.VideoUploadData;
-import com.doohee.main.service.VideoService;
+import com.doohee.mediaserver.entity.Exposure;
+import com.doohee.mediaserver.dto.VideoUploadData;
+import com.doohee.mediaserver.service.VideoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

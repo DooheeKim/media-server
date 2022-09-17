@@ -1,8 +1,8 @@
 package com.doohee.main;
 
-import com.doohee.key.dto.VideoKeyDto;
-import com.doohee.key.repository.KeyRepository;
-import com.doohee.key.service.KeyService;
+import com.doohee.mediaserver.dto.VideoKeyDto;
+import com.doohee.mediaserver.repository.KeyRepository;
+import com.doohee.mediaserver.service.KeyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,9 +1,8 @@
-package com.doohee.main.service;
+package com.doohee.mediaserver.service;
 
-import com.doohee.main.dto.VideoUploadData;
+import com.doohee.mediaserver.dto.VideoUploadData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

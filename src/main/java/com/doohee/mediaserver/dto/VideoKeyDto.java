@@ -1,6 +1,6 @@
-package com.doohee.key.dto;
+package com.doohee.mediaserver.dto;
 
-import com.doohee.key.entity.VideoKey;
+import com.doohee.mediaserver.entity.VideoKey;
 import lombok.*;
 
 @Getter

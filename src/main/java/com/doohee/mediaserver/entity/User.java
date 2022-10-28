@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,16 +20,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
     @Id
-    @Column(name="USER_ID", length = 127)
-    private String userId;
+    @Column(name="USER_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
-    @JsonIgnore
-    @Column(length=128)
+    @Column(length=63, unique = true)
+    private String username;
+
+    @Column(length=63)
     private String password;
 
-    @JsonIgnore
     @Column(length=10)
-    private String username;
+    private String nickname;
 
 
     @OneToMany(mappedBy="uploader")
@@ -43,3 +46,4 @@ public class User {
     private Set<Authority> authorities;
 
 }
+

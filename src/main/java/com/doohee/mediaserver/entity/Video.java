@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,14 +22,24 @@ public class Video {
     @Column(name="VIDEO_ID", length = 127)
     private String videoId;
 
-    @Column(length=63)
-    private String status;
+    @Column
+    private String title;
+
+    @Column(length=4095)
+    private String description;
+
+    @Column
+    private VideoStatus status;
 
     @Column
     private Exposure exposure;
 
     @Column
-    private Date uploadedDate;
+    private LocalDateTime uploadedDate;
+
+    @Column
+    private String extension;
+    //media 파일의 확장자''''
 
     @ManyToOne
     @JoinColumn(name="USER_ID")

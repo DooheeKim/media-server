@@ -1,7 +1,10 @@
 package com.doohee.mediaserver.service;
 
 import com.doohee.mediaserver.dto.VideoKeyDto;
-import com.doohee.mediaserver.service.KeyService;
+import com.doohee.mediaserver.dto.VideoUploadResultDto;
+import com.doohee.mediaserver.entity.Video;
+import com.doohee.mediaserver.repository.VideoRepository;
+import com.doohee.mediaserver.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -21,7 +25,22 @@ public class PackagingService {
 
     @Autowired
     KeyService keyService;
+    @Autowired
+    VideoRepository videoRepository;
 
+    public CompletableFuture<Integer> encodeToMultiResolution(String videoId){
+        Optional<Video> video = videoRepository.findById(videoId);
+        if(video.isEmpty()){
+            return CompletableFuture.completedFuture(-404);
+        }
+        Path videoFilePath = CommonUtil.videoPathFromId(video.get().getVideoId(), video.get().getExtension());
+        return encodeToMultiResolution(videoFilePath);
+    }
+
+    public CompletableFuture<Integer> encodeToMultiResolution(String videoId, String extension){
+        Path videoFilePath = CommonUtil.videoPathFromId(videoId, extension);
+        return encodeToMultiResolution(videoFilePath);
+    }
     @Async
     public CompletableFuture<Integer> encodeToMultiResolution(Path videoFilePath){
         int exitVal = -1;
@@ -100,5 +119,32 @@ public class PackagingService {
         finally{
             return CompletableFuture.completedFuture(exitVal);
         }
+    }
+
+    @Async
+    public CompletableFuture<Integer> encodeAndPackageVideo(VideoUploadResultDto videoDto){
+        int exitVal = -99;
+        //인코딩
+        CompletableFuture resultOfEncoding = encodeToMultiResolution(videoDto.getVideoId(), videoDto.getExtension());
+        try{
+            exitVal = (Integer) resultOfEncoding.get();
+        }catch(Exception e){
+            return CompletableFuture.completedFuture(exitVal);
+        }
+
+        if(exitVal!=0){
+            //exitVal이 뭔가 잘못됐으면
+            return CompletableFuture.completedFuture(exitVal);//--->패키징 진행 안 함
+        }
+        //인코딩이 성공적으로 완료되고 정상진행 되는 경우
+        CompletableFuture resultOfPackaging = encryptAndPackaging(videoDto.getVideoId());
+        exitVal = -88; //새로 초기화
+        try{
+            exitVal = (Integer) resultOfPackaging.get();
+        }catch(Exception e){
+            return CompletableFuture.completedFuture(exitVal);
+        }
+        return CompletableFuture.completedFuture(exitVal);
+
     }
 }

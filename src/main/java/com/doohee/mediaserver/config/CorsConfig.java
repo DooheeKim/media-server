@@ -12,14 +12,15 @@ public class CorsConfig {
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+//        config.setAllowCredentials(true);
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
-        source.registerCorsConfiguration("/key/**", config);
-        source.registerCorsConfiguration("/package/**", config);
-        source.registerCorsConfiguration("/main/**", config);
+        source.registerCorsConfiguration("/keys/**", config);
+        source.registerCorsConfiguration("/users/**", config);
+        source.registerCorsConfiguration("/videos/**", config);
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }

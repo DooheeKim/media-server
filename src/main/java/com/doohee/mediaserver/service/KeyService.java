@@ -2,10 +2,15 @@ package com.doohee.mediaserver.service;
 
 
 import com.doohee.mediaserver.dto.VideoKeyDto;
+import com.doohee.mediaserver.entity.VideoKey;
+import com.doohee.mediaserver.exception.NoVideoIdException;
 import com.doohee.mediaserver.repository.KeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -50,6 +55,22 @@ public class KeyService {
                 createNBytesHex(byteLength), createNBytesHex(byteLength)); //audio
 
         saveKeys(result);
+        return result;
+    }
+
+    public Map<String, String> getKey(String videoId){
+        Optional<VideoKey> videoKey = keyRepository.findById(videoId);
+        if(videoKey.isEmpty()){
+            throw new NoVideoIdException("해당 비디오 아이디에 대한 키가 존재하지 않습니다");
+        }
+        Map<String, String> result = new HashMap<>();
+
+        result.put(videoKey.get().getKeyIdFhd(), videoKey.get().getKeyFhd());
+        result.put(videoKey.get().getKeyIdHd(), videoKey.get().getKeyHd());
+        result.put(videoKey.get().getKeyIdSd(), videoKey.get().getKeySd());
+        result.put(videoKey.get().getKeyIdNhd(), videoKey.get().getKeyNhd());
+        result.put(videoKey.get().getKeyIdAudio(), videoKey.get().getKeyAudio());
+
         return result;
     }
 

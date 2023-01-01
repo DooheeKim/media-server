@@ -18,13 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -131,31 +128,21 @@ public class VideoService {
                 .extension(videoSaved.getExtension())
                 .build();
     }
-    public List<VideoAbstractDto> loadVideoList(){
-        //일단은 exposure가 public인 동영상 전부 리턴하게, 추후 업데이트
-        List<VideoAbstractDto> result = new ArrayList<>();
-        List<Video> videoList = videoRepository.findByStatusOrderByUploadedDate(Exposure.PUBLIC);
-        for(Video video: videoList){
-            result.add(VideoAbstractDto.builder()
-                            .videoId(video.getVideoId())
-                            .title(video.getTitle())
-                            .uploader(video.getUploader().getNickname())
-                            .description(video.getDescription())
-                            .thumbnail(thumbnailInBase64(video.getVideoId()))
-                    .build());
-        }
-        return result;
-    };
+//    public List<VideoAbstractDto> loadVideoList(){
+//        //일단은 exposure가 public인 동영상 전부 리턴하게, 추후 업데이트
+//        List<VideoAbstractDto> result = new ArrayList<>();
+//        List<Video> videoList = videoRepository.findByStatusOrderByUploadedDate(Exposure.PUBLIC);
+//        for(Video video: videoList){
+//            result.add(VideoAbstractDto.builder()
+//                            .videoId(video.getVideoId())
+//                            .title(video.getTitle())
+//                            .uploader(video.getUploader().getNickname())
+//                            .description(video.getDescription())
+//                            .thumbnail(thumbnailInBase64(video.getVideoId(), video.getThumbnailExtension()))
+//                    .build());
+//        }
+//        return result;
+//    };
 
-    private String thumbnailInBase64(String videoId){
-        Path thumbnailPath = Paths.get(environment.getProperty("storage.path"), videoId, videoId);
-        byte[] thumbnail;
 
-        try{
-            thumbnail = Files.readAllBytes(thumbnailPath);
-        } catch (IOException e) {
-            throw new StorageException(e);
-        }
-        return Base64.getEncoder().encodeToString(thumbnail);
-    }
 }

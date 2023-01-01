@@ -1,6 +1,5 @@
 package com.doohee.mediaserver.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +43,9 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name="AUTHORITY_NAME", referencedColumnName = "AUTHORITY_NAME")}
     )
     private Set<Authority> authorities;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserVideoRelation> userVideoRelations;
 
 }
 

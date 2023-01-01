@@ -56,10 +56,10 @@ public class VideoController {
         packagingService.encodeAndPackageVideo(videoUploadResultDto);
         return ResponseEntity.ok(videoUploadResultDto);
     }
-    @GetMapping(value = "/")
-    public ResponseEntity<List<VideoAbstractDto>> listVideos(){
-        return ResponseEntity.ok(videoService.loadVideoList());
-    }
+//    @GetMapping(value = "/")
+//    public ResponseEntity<List<VideoAbstractDto>> listVideos(){
+//        return ResponseEntity.ok(videoService.loadVideoList());
+//    }
 
 
 

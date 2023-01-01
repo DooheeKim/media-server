@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @IdClass(UserVideoId.class)
-public class UserVideoMap {
+public class UserVideoRelation {
     @Id
     @ManyToOne
     @JoinColumn(name="USER_ID")

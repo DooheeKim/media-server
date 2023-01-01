@@ -40,12 +40,17 @@ public class Video {
     @Column
     private String extension;
     //media 파일의 확장자''''
+    @Column
+    private String thumbnailExtension;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="USER_ID")
     private User uploader;
 
     @OneToMany(mappedBy = "video")
-    private List<UserVideoMap> userVideoMaps;
+    private List<UserVideoRelation> userVideoRelations;
+
+    @OneToMany(mappedBy = "video")
+    private List<Comment> comments;
 
 }

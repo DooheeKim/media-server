@@ -1,0 +1,4 @@
+insert into authority (AUTHORITY_NAME) values ('ROLE_USER');
+insert into authority (AUTHORITY_NAME) values ('ROLE_ADMIN');
+insert into video_key (video_id, key_id_fhd, key_fhd, key_id_hd, key_hd, key_id_sd, key_sd,key_id_nhd, key_nhd, key_id_audio, key_audio) values ('test_video_id_fixed', 'e980393035649b5cc082908d195cbeb4', '0abb8bb3c6f31fc313c3d28f9ff28667', 'ebd5d6544486ec5a872991c8ff854ce2', 'ade581f0b8e3743d7fd93beff971a946', 'c9c26935e8a9f12899f4b7c77426204f', '37461a165d13227beea8fde9d3367306', 'c9a79d0804d45264f7de2f66af75688c', '158f25eeb81dc3a4cc9a28262cd05d7d', '34fe57f3db8f512da22effc10f899bca', 'ebd8161cb76ff291e13264d4f1cab0dd');
+--insert into users (USER_ID, NICKNAME, PASSWORD, USERNAME) values (1, 'doit', '$2a$10$kqQnon0piNOHbOP829k.EeL0nURYrOx3RqvIUL4f3g1gmtIt0I7um', 'doohee');

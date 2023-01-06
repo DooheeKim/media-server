@@ -18,9 +18,4 @@ class MediaServerApplicationTests {
 		assertThat(environment.getProperty("server.main"))
 				.isEqualTo("http://localhost:8080");
 	}
-	@Test
-	void contextLoads() {
-
-	}
-
 }

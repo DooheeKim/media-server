@@ -6,10 +6,12 @@ import com.doohee.mediaserver.dto.VideoUploadResultDto;
 import com.doohee.mediaserver.entity.Video;
 import com.doohee.mediaserver.service.PackagingService;
 import com.doohee.mediaserver.service.VideoService;
+import com.doohee.mediaserver.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +35,7 @@ public class VideoController {
     VideoService videoService;
     @Autowired
     PackagingService packagingService;
+    private final int videosPerPage = 30;
 
     @GetMapping("/dash/{videoId}/{filename}")
     public ResponseEntity<Resource> getVideoWithDash(
@@ -56,10 +60,13 @@ public class VideoController {
         packagingService.encodeAndPackageVideo(videoUploadResultDto);
         return ResponseEntity.ok(videoUploadResultDto);
     }
-//    @GetMapping(value = "/")
-//    public ResponseEntity<List<VideoAbstractDto>> listVideos(){
-//        return ResponseEntity.ok(videoService.loadVideoList());
-//    }
+    @GetMapping(value = "/")
+    public ResponseEntity<Page<VideoAbstractDto>> listVideos(@RequestParam(required = false) String uploaderId,
+                                                             @RequestParam(required = false) String keyword,
+                                                             @RequestParam(required = false, defaultValue = "0") Integer page) {
+        String userId = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(videoService.loadVideoList(userId, uploaderId, keyword, page, videosPerPage));
+    }
 
 
 

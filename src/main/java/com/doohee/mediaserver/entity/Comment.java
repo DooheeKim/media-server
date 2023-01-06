@@ -1,9 +1,6 @@
 package com.doohee.mediaserver.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name="COMMENT")
 @Builder
 @AllArgsConstructor
@@ -32,6 +30,9 @@ public class Comment {
 
     @Column
     private boolean fixed;
+
+    @Column
+    private boolean isDeleted;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="COMMENT_ID",insertable=false, updatable=false)

@@ -13,6 +13,10 @@ public class QCommentAbstractDto extends ConstructorExpression<CommentAbstractDt
 
     private static final long serialVersionUID = -944649359L;
 
+    public QCommentAbstractDto(com.querydsl.core.types.Expression<String> commentId, com.querydsl.core.types.Expression<String> content, com.querydsl.core.types.Expression<String> writerId, com.querydsl.core.types.Expression<String> writerNickname, com.querydsl.core.types.Expression<java.time.LocalDateTime> writtenDate, com.querydsl.core.types.Expression<Boolean> fixed, com.querydsl.core.types.Expression<Integer> numChildComments) {
+        super(CommentAbstractDto.class, new Class<?>[]{String.class, String.class, String.class, String.class, java.time.LocalDateTime.class, boolean.class, int.class}, commentId, content, writerId, writerNickname, writtenDate, fixed, numChildComments);
+    }
+
     public QCommentAbstractDto(com.querydsl.core.types.Expression<String> commentId, com.querydsl.core.types.Expression<String> content, com.querydsl.core.types.Expression<String> writerId, com.querydsl.core.types.Expression<String> writerNickname, com.querydsl.core.types.Expression<java.time.LocalDateTime> writtenDate, com.querydsl.core.types.Expression<Boolean> fixed) {
         super(CommentAbstractDto.class, new Class<?>[]{String.class, String.class, String.class, String.class, java.time.LocalDateTime.class, boolean.class}, commentId, content, writerId, writerNickname, writtenDate, fixed);
     }

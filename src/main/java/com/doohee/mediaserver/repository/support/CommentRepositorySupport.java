@@ -40,13 +40,13 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
 
     public Page<CommentAbstractDto> findCommentByVideoId(String videoId, Pageable pageable){
         JPAQuery<CommentAbstractDto> query = jpaQueryFactory.select(new QCommentAbstractDto(comment.commentId, comment.content, comment.writer.username, comment.writer.nickname,
-                        comment.registerDate, comment.fixed))
+                        comment.registerDate, comment.fixed, comment.childComments.size()))
                 .from(comment)
-                .where(videoId(videoId))
+                .where(videoId(videoId), isDeleted(), parentCommentId(null))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 
-        query.orderBy(video.uploadedDate.desc());
+        query.orderBy(comment.registerDate.desc());
         List<CommentAbstractDto> results = query.fetch();
 
         return new PageImpl<>(results, pageable, results.size());
@@ -68,6 +68,9 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
 
     private BooleanExpression videoId(String videoId){
         return comment.video.videoId.eq(videoId);
+    }
+    private BooleanExpression isDeleted(){
+        return comment.isDeleted.eq(false);
     }
     private BooleanExpression parentCommentId(String commentId){
         return comment.parent.commentId.eq(commentId);

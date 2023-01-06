@@ -3,10 +3,12 @@ package com.doohee.mediaserver.service;
 
 import com.doohee.mediaserver.dto.VideoKeyDto;
 import com.doohee.mediaserver.entity.VideoKey;
+import com.doohee.mediaserver.exception.NoPermissionException;
 import com.doohee.mediaserver.exception.NoVideoIdException;
 import com.doohee.mediaserver.repository.KeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ public class KeyService {
 
     @Autowired
     private KeyRepository keyRepository;
+    @Autowired
+    VideoService videoService;
 
     public String createNBytesHex(int n){
         //n바이트의 16진수 String을 반환합니다.
@@ -35,6 +39,7 @@ public class KeyService {
         return new String(hexChars);
     }
 
+    @Transactional
     public void saveKeys(VideoKeyDto videoKeyDto) throws IllegalArgumentException{
         keyRepository.save(videoKeyDto.toEntity());
     }
@@ -58,7 +63,10 @@ public class KeyService {
         return result;
     }
 
-    public Map<String, String> getKey(String videoId){
+    @Transactional
+    public Map<String, String> getKey(String userId, String videoId){
+        if(!videoService.checkVideoPermission(userId, videoId)) throw new NoPermissionException("해당 비디오에 접근할 수 있는 권한이 없습니다"); //
+
         Optional<VideoKey> videoKey = keyRepository.findById(videoId);
         if(videoKey.isEmpty()){
             throw new NoVideoIdException("해당 비디오 아이디에 대한 키가 존재하지 않습니다");

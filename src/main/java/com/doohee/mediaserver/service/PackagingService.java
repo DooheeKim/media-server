@@ -3,12 +3,14 @@ package com.doohee.mediaserver.service;
 import com.doohee.mediaserver.dto.VideoKeyDto;
 import com.doohee.mediaserver.dto.VideoUploadResultDto;
 import com.doohee.mediaserver.entity.Video;
+import com.doohee.mediaserver.entity.VideoStatus;
 import com.doohee.mediaserver.repository.VideoRepository;
 import com.doohee.mediaserver.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -127,24 +129,39 @@ public class PackagingService {
         //인코딩
         CompletableFuture resultOfEncoding = encodeToMultiResolution(videoDto.getVideoId(), videoDto.getExtension());
         try{
+            setVideoStatus(VideoStatus.ENCODING, videoDto.getVideoId());
             exitVal = (Integer) resultOfEncoding.get();
         }catch(Exception e){
+            setVideoStatus(VideoStatus.FAILED, videoDto.getVideoId());
             return CompletableFuture.completedFuture(exitVal);
         }
 
         if(exitVal!=0){
             //exitVal이 뭔가 잘못됐으면
+            setVideoStatus(VideoStatus.FAILED, videoDto.getVideoId());
             return CompletableFuture.completedFuture(exitVal);//--->패키징 진행 안 함
         }
         //인코딩이 성공적으로 완료되고 정상진행 되는 경우
         CompletableFuture resultOfPackaging = encryptAndPackaging(videoDto.getVideoId());
         exitVal = -88; //새로 초기화
         try{
+            setVideoStatus(VideoStatus.PACKAGING, videoDto.getVideoId());
             exitVal = (Integer) resultOfPackaging.get();
         }catch(Exception e){
+            setVideoStatus(VideoStatus.FAILED, videoDto.getVideoId());
             return CompletableFuture.completedFuture(exitVal);
         }
+        setVideoStatus(VideoStatus.COMPLETED, videoDto.getVideoId());
         return CompletableFuture.completedFuture(exitVal);
 
+    }
+
+    @Transactional
+    public void setVideoStatus(VideoStatus status, String videoId){
+        Optional<Video> videoOpt = videoRepository.findById(videoId);
+        if(videoOpt.isEmpty()) return;
+        Video video = videoOpt.get();
+        video.setStatus(status);
+        videoRepository.save(video);
     }
 }

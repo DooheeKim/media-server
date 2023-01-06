@@ -1,5 +1,5 @@
 package com.doohee.mediaserver.entity;
 
 public enum VideoStatus {
-    UPLOADED
+    UPLOADED, ENCODING, PACKAGING, COMPLETED, FAILED
 }

@@ -1,7 +1,7 @@
 package com.doohee.mediaserver.controller;
 
-import com.doohee.mediaserver.dto.VideoKeyDto;
 import com.doohee.mediaserver.service.KeyService;
+import com.doohee.mediaserver.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +16,10 @@ import java.util.Map;
 public class KeyController {
     @Autowired
     KeyService keyService;
+
     @GetMapping("/{videoId}")
     public ResponseEntity<Map<String, String>> getVideoKey(@PathVariable String videoId){
-        return ResponseEntity.ok(keyService.getKey(videoId));
+        String userId = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(keyService.getKey(userId, videoId));
     }
 }

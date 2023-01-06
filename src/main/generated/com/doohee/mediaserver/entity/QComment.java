@@ -30,6 +30,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final BooleanPath fixed = createBoolean("fixed");
 
+    public final BooleanPath isDeleted = createBoolean("isDeleted");
+
     public final QComment parent;
 
     public final DateTimePath<java.time.LocalDateTime> registerDate = createDateTime("registerDate", java.time.LocalDateTime.class);

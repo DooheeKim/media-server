@@ -3,21 +3,23 @@ package com.doohee.mediaserver.service;
 import com.doohee.mediaserver.dto.VideoAbstractDto;
 import com.doohee.mediaserver.dto.VideoUploadDto;
 import com.doohee.mediaserver.dto.VideoUploadResultDto;
-import com.doohee.mediaserver.entity.Exposure;
-import com.doohee.mediaserver.entity.User;
-import com.doohee.mediaserver.entity.Video;
-import com.doohee.mediaserver.entity.VideoStatus;
+import com.doohee.mediaserver.entity.*;
 import com.doohee.mediaserver.exception.NoUsernameException;
 import com.doohee.mediaserver.exception.StorageException;
 import com.doohee.mediaserver.exception.UnsupportedExtensionException;
 import com.doohee.mediaserver.repository.UserRepository;
+import com.doohee.mediaserver.repository.UserVideoRelationRepository;
 import com.doohee.mediaserver.repository.VideoRepository;
+import com.doohee.mediaserver.repository.support.VideoRepositorySupport;
 import com.doohee.mediaserver.util.SecurityUtil;
 import com.doohee.mediaserver.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class VideoService {
@@ -40,6 +39,10 @@ public class VideoService {
     VideoRepository videoRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserVideoRelationRepository userVideoRelationRepository;
+    @Autowired
+    VideoRepositorySupport videoRepositorySupport;
     private String getFileExtension(String fileName){
         //파일 이름으로부터 확장자만 분리, 반환
         if (fileName.isEmpty() || !fileName.contains(".")){
@@ -128,6 +131,24 @@ public class VideoService {
                 .extension(videoSaved.getExtension())
                 .build();
     }
+    public boolean checkVideoPermission(String userId, String videoId){
+        Optional<Video> videoOpt = videoRepository.findById(videoId);
+
+        if(videoOpt.isEmpty()) return false;
+
+        Video video = videoOpt.get();
+        if(video.getExposure().equals(Exposure.PUBLIC)) return true;
+
+        //여기까지 오면 video의 exposure가 private인 경우임
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()) return false;
+        UserVideoId userVideoId = new  UserVideoId(userId, videoId);
+        if(userVideoRelationRepository.findById(userVideoId).isPresent()){
+            return true;
+        }
+
+        return false;
+    }
 //    public List<VideoAbstractDto> loadVideoList(){
 //        //일단은 exposure가 public인 동영상 전부 리턴하게, 추후 업데이트
 //        List<VideoAbstractDto> result = new ArrayList<>();
@@ -143,6 +164,10 @@ public class VideoService {
 //        }
 //        return result;
 //    };
+
+    public Page<VideoAbstractDto> loadVideoList(String userId, String uploaderId, String keyword, Integer page, Integer limit){
+        return videoRepositorySupport.findVideo(userId, uploaderId, keyword, PageRequest.of(page, limit));
+    }
 
 
 }

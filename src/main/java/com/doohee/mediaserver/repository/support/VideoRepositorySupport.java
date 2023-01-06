@@ -58,6 +58,7 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
     private BooleanExpression videoPermission(String userId){
         return TextUtils.isEmpty(userId)? video.exposure.eq(Exposure.PUBLIC)
                 :video.exposure.eq(Exposure.PUBLIC)
+                .or(video.uploader.username.eq(userId))
                 .or(video.userVideoRelations.any().user.username.eq(userId));
     }
 

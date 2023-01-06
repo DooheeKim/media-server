@@ -1,8 +1,11 @@
 package com.doohee.mediaserver.entity;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@AllArgsConstructor
 @IdClass(UserVideoId.class)
 public class UserVideoRelation {
     @Id

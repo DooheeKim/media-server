@@ -73,6 +73,7 @@ public class CommentRepositorySupport extends QuerydslRepositorySupport {
         return comment.isDeleted.eq(false);
     }
     private BooleanExpression parentCommentId(String commentId){
+        if(commentId==null) return comment.parent.commentId.isNull();
         return comment.parent.commentId.eq(commentId);
     }
 

@@ -64,8 +64,8 @@ public class VideoController {
     public ResponseEntity<Page<VideoAbstractDto>> listVideos(@RequestParam(required = false) String uploaderId,
                                                              @RequestParam(required = false) String keyword,
                                                              @RequestParam(required = false, defaultValue = "0") Integer page) {
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(videoService.loadVideoList(userId, uploaderId, keyword, page, videosPerPage));
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(videoService.loadVideoList(username, uploaderId, keyword, page, videosPerPage));
     }
 
 

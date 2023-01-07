@@ -34,11 +34,11 @@ public class CommentService {
 
 
     // 댓글 작성
-    public CommentAbstractDto writeComment(String userId, String videoId, String content, String parentCommentId){
-        if(!videoService.checkVideoPermission(userId, videoId)){
+    public CommentAbstractDto writeComment(String username, String videoId, String content, String parentCommentId){
+        if(!videoService.checkVideoPermission(username, videoId)){
             throw new NoPermissionException("해당 요청에 대한 접근 권한이 없습니다.");
         }
-        User user = userRepository.findById(userId).get(); // 존재하지 않는 유저인지 위에서 이미 체크함
+        User user = userRepository.findByUsername(username).get(); // 존재하지 않는 유저인지 위에서 이미 체크함
         Video video = videoRepository.findById(videoId).get(); // 존재하지 않는 비디오인지 위에서 이미 체크함
 
         Comment parentComment = null;
@@ -64,8 +64,8 @@ public class CommentService {
         return CommentAbstractDto.from(comment);
     }
     // 댓글 수정
-    public CommentAbstractDto modifyComment(String userId, String commentId, String content){
-        Optional<User> user = userRepository.findById(userId);
+    public CommentAbstractDto modifyComment(String username, String commentId, String content){
+        Optional<User> user = userRepository.findByUsername(username);
         if(user.isEmpty()) throw new NoUsernameException("존재하지 않는 유저입니다.");
 
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
@@ -80,8 +80,8 @@ public class CommentService {
     }
 
     // 댓글 삭제
-    public CommentAbstractDto deleteComment(String userId, String commentId){
-        Optional<User> user = userRepository.findById(userId);
+    public CommentAbstractDto deleteComment(String username, String commentId){
+        Optional<User> user = userRepository.findByUsername(username);
         if(user.isEmpty()) throw new NoUsernameException("존재하지 않는 유저입니다.");
 
         Optional<Comment> commentOpt = commentRepository.findById(commentId);
@@ -95,8 +95,8 @@ public class CommentService {
         return new CommentAbstractDto(commentId);
     }
     // 댓글 가져오기
-    public Page<CommentAbstractDto> getCommentsList(String userId, String videoId, Integer page, Integer limit){
-        if(!videoService.checkVideoPermission(userId, videoId)){
+    public Page<CommentAbstractDto> getCommentsList(String username, String videoId, Integer page, Integer limit){
+        if(!videoService.checkVideoPermission(username, videoId)){
             throw new NoPermissionException("해당 요청에 대한 접근 권한이 없습니다.");
         }
         return commentRepositorySupport.findCommentByVideoId(videoId, PageRequest.of(page, limit));

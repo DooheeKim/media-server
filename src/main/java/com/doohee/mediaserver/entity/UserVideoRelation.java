@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class UserVideoRelation {
     @Id
     @ManyToOne
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name="USERNAME")
     private User user;
 
     @Id

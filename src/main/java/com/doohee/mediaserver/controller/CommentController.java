@@ -20,23 +20,23 @@ public class CommentController {
 
     @PostMapping("/")
     ResponseEntity<CommentAbstractDto> writeComment(@RequestBody CommentWriteDto inDto){
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(commentService.writeComment(userId, inDto.getVideoId(), inDto.getContent(), inDto.getParentCommentId()));
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(commentService.writeComment(username, inDto.getVideoId(), inDto.getContent(), inDto.getParentCommentId()));
     }
     @GetMapping("/list")
-    ResponseEntity<Page<CommentAbstractDto>> listAllComments(@RequestParam String videoId, @RequestParam Integer page){
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(commentService.getCommentsList(userId, videoId, page, commentsPerPage));
+    ResponseEntity<Page<CommentAbstractDto>> listAllComments(@RequestParam String videoId, @RequestParam(required = false, defaultValue = "0") Integer page){
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(commentService.getCommentsList(username, videoId, page, commentsPerPage));
     }
     @PutMapping("/")
     ResponseEntity<CommentAbstractDto> modifyComment(@RequestBody CommentModifyDto inDto){
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(commentService.modifyComment(userId, inDto.getCommentId(), inDto.getContent()));
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(commentService.modifyComment(username, inDto.getCommentId(), inDto.getContent()));
     }
     @DeleteMapping("/{commentId}")
     ResponseEntity<CommentAbstractDto> deleteComment(@PathVariable String commentId){
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(commentService.deleteComment(userId, commentId));
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(commentService.deleteComment(username, commentId));
     }
 
 

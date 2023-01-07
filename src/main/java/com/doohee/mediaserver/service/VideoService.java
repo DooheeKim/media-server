@@ -19,7 +19,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,7 +83,7 @@ public class VideoService {
         if(!CommonUtil.isImage(thumbnailExtension)){
             throw new UnsupportedExtensionException("지원하지 않는 이미지 확장자입니다");
         }
-        User user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         Path videoStorePath = CommonUtil.videoPathFromId(videoId.toString(), videoExtension);
         Path thumbnailStorePath = CommonUtil.videoPathFromId(videoId.toString(), thumbnailExtension);
 
@@ -116,7 +115,7 @@ public class VideoService {
                 .status(VideoStatus.UPLOADED)
                 .exposure(videoUploadDto.getExposure())
                 .uploadedDate(LocalDateTime.now())
-                .uploader(user)
+                .uploader(user.get())
                 .extension(videoExtension)
                 .thumbnailExtension(thumbnailExtension)
                 .build();
@@ -133,7 +132,7 @@ public class VideoService {
                 .exposure(videoSaved.getExposure())
                 .build();
     }
-    public boolean checkVideoPermission(String userId, String videoId){
+    public boolean checkVideoPermission(String username, String videoId){
         Optional<Video> videoOpt = videoRepository.findById(videoId);
 
         if(videoOpt.isEmpty()) return false;
@@ -142,9 +141,9 @@ public class VideoService {
         if(video.getExposure().equals(Exposure.PUBLIC)) return true;
 
         //여기까지 오면 video의 exposure가 private인 경우임
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if(userOptional.isEmpty()) return false;
-        UserVideoId userVideoId = new  UserVideoId(userId, videoId);
+        UserVideoId userVideoId = new  UserVideoId(username, videoId);
         if(userVideoRelationRepository.findById(userVideoId).isPresent()){
             return true;
         }
@@ -167,8 +166,8 @@ public class VideoService {
 //        return result;
 //    };
 
-    public Page<VideoAbstractDto> loadVideoList(String userId, String uploaderId, String keyword, Integer page, Integer limit){
-        return videoRepositorySupport.findVideo(userId, uploaderId, keyword, PageRequest.of(page, limit));
+    public Page<VideoAbstractDto> loadVideoList(String username, String uploaderId, String keyword, Integer page, Integer limit){
+        return videoRepositorySupport.findVideo(username, uploaderId, keyword, PageRequest.of(page, limit));
     }
 
 

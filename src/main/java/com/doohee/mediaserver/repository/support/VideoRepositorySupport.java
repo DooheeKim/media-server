@@ -37,10 +37,10 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
         super(Video.class);
     }
 
-    public Page<VideoAbstractDto> findVideo(String userId, String uploaderId, String keyword, Pageable pageable){
+    public Page<VideoAbstractDto> findVideo(String username, String uploaderId, String keyword, Pageable pageable){
         JPAQuery<VideoAbstractDto> query = jpaQueryFactory.select(new QVideoAbstractDto(video.videoId, video.title, video.thumbnailExtension, video.uploader.username, video.uploadedDate))
                 .from(video)
-                .where(uploader(uploaderId), videoPermission(userId), keyword(keyword))
+                .where(uploader(uploaderId), videoPermission(username), keyword(keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
         query.orderBy(video.uploadedDate.desc());
@@ -48,15 +48,15 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
         return new PageImpl<>(results, pageable, results.size());
     }
 
-    private BooleanExpression uploader(String userId){
-        return TextUtils.isEmpty(userId)? null
-                : video.uploader.username.eq(userId);
+    private BooleanExpression uploader(String username){
+        return TextUtils.isEmpty(username)? null
+                : video.uploader.username.eq(username);
     }
-    private BooleanExpression videoPermission(String userId){
-        return TextUtils.isEmpty(userId)? video.exposure.eq(Exposure.PUBLIC)
+    private BooleanExpression videoPermission(String username){
+        return TextUtils.isEmpty(username)? video.exposure.eq(Exposure.PUBLIC)
                 :video.exposure.eq(Exposure.PUBLIC)
-                .or(video.uploader.username.eq(userId))
-                .or(video.userVideoRelations.any().user.username.eq(userId));
+                .or(video.uploader.username.eq(username))
+                .or(video.userVideoRelations.any().user.username.eq(username));
     }
 
     private BooleanExpression keyword(String keyword){

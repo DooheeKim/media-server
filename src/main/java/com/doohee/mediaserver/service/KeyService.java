@@ -64,8 +64,8 @@ public class KeyService {
     }
 
     @Transactional
-    public Map<String, String> getKey(String userId, String videoId){
-        if(!videoService.checkVideoPermission(userId, videoId)) throw new NoPermissionException("해당 비디오에 접근할 수 있는 권한이 없습니다"); //
+    public Map<String, String> getKey(String username, String videoId){
+        if(!videoService.checkVideoPermission(username, videoId)) throw new NoPermissionException("해당 비디오에 접근할 수 있는 권한이 없습니다"); //
 
         Optional<VideoKey> videoKey = keyRepository.findById(videoId);
         if(videoKey.isEmpty()){

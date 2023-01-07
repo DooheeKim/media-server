@@ -19,7 +19,7 @@ public class KeyController {
 
     @GetMapping("/{videoId}")
     public ResponseEntity<Map<String, String>> getVideoKey(@PathVariable String videoId){
-        String userId = SecurityUtil.getCurrentUsername();
-        return ResponseEntity.ok(keyService.getKey(userId, videoId));
+        String username = SecurityUtil.getCurrentUsername();
+        return ResponseEntity.ok(keyService.getKey(username, videoId));
     }
 }

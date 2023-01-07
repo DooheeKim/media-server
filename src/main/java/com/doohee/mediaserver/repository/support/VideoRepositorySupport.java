@@ -5,7 +5,6 @@ import com.doohee.mediaserver.dto.VideoAbstractDto;
 import com.doohee.mediaserver.entity.Exposure;
 import com.doohee.mediaserver.entity.Video;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -44,10 +43,8 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
                 .where(uploader(uploaderId), videoPermission(userId), keyword(keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
-
         query.orderBy(video.uploadedDate.desc());
         List<VideoAbstractDto> results = query.fetch();
-
         return new PageImpl<>(results, pageable, results.size());
     }
 

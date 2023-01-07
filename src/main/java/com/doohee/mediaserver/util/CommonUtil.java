@@ -34,7 +34,7 @@ public class CommonUtil {
                 videoId+"."+extension);//파일명
     }
     public static String thumbnailInBase64(String videoId, String thumbnailExtension){
-        Path thumbnailPath = Paths.get(getStoragePath(), videoId, thumbnailExtension);
+        Path thumbnailPath = Paths.get(getStoragePath(), videoId, videoId+"."+thumbnailExtension);
         byte[] thumbnail;
 
         try{

@@ -118,6 +118,7 @@ public class VideoService {
                 .uploadedDate(LocalDateTime.now())
                 .uploader(user)
                 .extension(videoExtension)
+                .thumbnailExtension(thumbnailExtension)
                 .build();
         Video videoSaved = videoRepository.save(video);
 
@@ -129,6 +130,7 @@ public class VideoService {
                 .username(videoSaved.getUploader().getUsername())
                 .videoId(videoSaved.getVideoId())
                 .extension(videoSaved.getExtension())
+                .exposure(videoSaved.getExposure())
                 .build();
     }
     public boolean checkVideoPermission(String userId, String videoId){

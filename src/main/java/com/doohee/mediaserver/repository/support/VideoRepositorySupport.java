@@ -5,6 +5,7 @@ import com.doohee.mediaserver.dto.VideoAbstractDto;
 import com.doohee.mediaserver.entity.Exposure;
 import com.doohee.mediaserver.entity.Video;
 
+import com.doohee.mediaserver.entity.VideoStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -40,7 +41,7 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
     public Page<VideoAbstractDto> findVideo(String username, String uploaderId, String keyword, Pageable pageable){
         JPAQuery<VideoAbstractDto> query = jpaQueryFactory.select(new QVideoAbstractDto(video.videoId, video.title, video.thumbnailExtension, video.uploader.username, video.uploadedDate))
                 .from(video)
-                .where(uploader(uploaderId), videoPermission(username), keyword(keyword))
+                .where(uploader(uploaderId), videoPermission(username), keyword(keyword), uploadComplete())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
         query.orderBy(video.uploadedDate.desc());
@@ -63,6 +64,10 @@ public class VideoRepositorySupport extends QuerydslRepositorySupport {
         return TextUtils.isEmpty(keyword)?null
                 : video.title.contains(keyword)
                 .or(video.description.contains(keyword));
+    }
+
+    private BooleanExpression uploadComplete(){
+        return video.status.eq(VideoStatus.COMPLETED);
     }
 
 }

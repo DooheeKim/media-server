@@ -11,5 +11,8 @@
 <h5> Requirements <h5>
 <ul>
 <li>ffmpeg 설치</li>
-<li>shaka-packager 적절한 경로에 두기 (https://github.com/shaka-project/shaka-packager)</li>
-<ul>
+<li>shaka-packager 운영체제 버전에 맞게 다운로드(https://github.com/shaka-project/shaka-packager)</li>
+</ul>
+<h5>설정</h5>
+
+<p>application.properties에 </br>1) storage.path 적절히 변경</br> 2)shaka-packager를 storage.path 하위로 이동 후 </br> 3) command.package의 ${storage.path}/packager-osx-x64 를 자신의 shaka-packager 파일명에 맞게 변경</p>
